@@ -1,5 +1,5 @@
 # hexpert
-Lazarus IDE plugin
+Lazarus IDE plugin by Alirio Gavidia <alirio.gavidia@gmail.com>
 
 Our objective is to create some kind o expert, this is a sort of plugin in  Lazarus's IDE similar to "GExperts" (for Delphi).
 
@@ -56,3 +56,4 @@ editor."
 
 And of course my thanks to the Lazarus project. https://wiki.freepascal.org/ or https://www.lazarus-ide.org/
 
+Alirio Gavidia <alirio.gavidia@gmail.com>
