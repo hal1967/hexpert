@@ -248,6 +248,10 @@ begin
 
   btn := btn + ']'; // End of set    // [ mbAbort, mbRetry, mbIgnore]
 
+  // Margin to keep aligment, to use spaces is not the best option.
+  margin := StringOfChar(' ' , xpos);
+
+
   if CmbEmbed.ItemIndex=1 then // if ... then
     begin
       pre := 'if ';
@@ -261,9 +265,9 @@ begin
   else if CmbEmbed.ItemIndex=3 then // case
     begin
       pre := 'case ';
-      post :=  ' of '#13;
-      post := post + StringReplace(GetRstString, ', ', ': ;'#13,
-               [rfReplaceAll, rfIgnoreCase]) + '; ;'#13 + 'end';
+      post :=  ' of '#13+margin;
+      post := post + StringReplace(GetRstString, ', ', ': ;'#13+margin,
+               [rfReplaceAll, rfIgnoreCase]) + ': ;'#13 +margin+'end';
     end
   else
     begin
@@ -271,12 +275,10 @@ begin
       post :=  '';
     end;
 
-
+  margin := margin + '       ';
   msg := pre + 'MessageDlg( ' +
          QuotedStr(EdCaption.Text) + ', '#13;
 
-  // Margin to keep aligment, to use spaces is not the best option.
-  margin := StringOfChar(' ' , xpos) + '       ';
 
 
   for i:= 0 to mmMsg.Lines.Count-2 do  // Except last line
@@ -339,6 +341,8 @@ begin
   else
     flags := msgbtn[RBBtnsBoxRBDlgTypeBox1.ItemIndex];
 
+  // Margin to keep aligment
+  margin := StringOfChar(' ' , xpos);
 
   if CmbEmbed.ItemIndex=1 then // if ... then
     begin
@@ -353,8 +357,9 @@ begin
   else if CmbEmbed.ItemIndex=3 then // case
     begin
       pre := 'case ';
-      post :=  ' of '#13;
-      post := post + StringReplace(GetRstString, ', ', ': ;'#13, [rfReplaceAll, rfIgnoreCase]) + '; ;'#13 + 'end';
+      post :=  ' of '#13+margin;
+      post := post + StringReplace(GetRstString, ', ', ': ;'#13+margin,
+                     [rfReplaceAll, rfIgnoreCase]) + ': ;'#13 + margin + 'end';
     end
   else
     begin
@@ -362,12 +367,9 @@ begin
       post :=  '';
     end;
 
-
+  margin := margin + '       ';
 
   msg := pre + 'Forms.Application.MessageBox('#13;
-
-  // Margin to keep aligment
-  margin := StringOfChar(' ' , xpos) + '       ';
 
   for i:= 0 to mmMsg.Lines.Count-2 do
     msg := msg + margin + CondQuotedStr(mmMsg.Lines[i] ) + '#13 +' + #13;
