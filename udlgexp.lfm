@@ -1,0 +1,561 @@
+object frmMsgDlgExp: TfrmMsgDlgExp
+  Left = 603
+  Height = 754
+  Top = 43
+  Width = 625
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsDialog
+  Caption = 'Message Dialog'
+  ClientHeight = 754
+  ClientWidth = 625
+  OnShow = FormShow
+  LCLVersion = '2.2.2.0'
+  object Label1: TLabel
+    Left = 35
+    Height = 18
+    Top = 66
+    Width = 55
+    Caption = 'Message'
+    ParentColor = False
+  end
+  object mmMsg: TMemo
+    Left = 35
+    Height = 97
+    Top = 87
+    Width = 556
+    Lines.Strings = (
+      'Thanks: '
+      '   GExperts team'
+    )
+    TabOrder = 0
+  end
+  object CheckBox2: TCheckBox
+    Left = 35
+    Height = 22
+    Top = 193
+    Width = 120
+    Caption = 'Save as default'
+    TabOrder = 1
+    Visible = False
+  end
+  object Label2: TLabel
+    Left = 196
+    Height = 18
+    Top = 198
+    Width = 43
+    Caption = 'Embed'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 450
+    Height = 18
+    Top = 198
+    Width = 78
+    Caption = 'Help context'
+    ParentColor = False
+  end
+  object CmbEmbed: TComboBox
+    Left = 256
+    Height = 32
+    Top = 190
+    Width = 177
+    ItemHeight = 24
+    Items.Strings = (
+      'as procedure'
+      'if'
+      'negative if'
+      'case'
+    )
+    OnChange = CmbEmbedChange
+    TabOrder = 2
+    Text = 'simple call'
+  end
+  object SeHelpContext: TSpinEdit
+    Left = 538
+    Height = 32
+    Top = 192
+    Width = 53
+    TabOrder = 3
+  end
+  object PageControl1: TPageControl
+    Left = 35
+    Height = 450
+    Top = 238
+    Width = 556
+    ActivePage = TabSheet1
+    TabIndex = 0
+    TabOrder = 4
+    object TabSheet1: TTabSheet
+      Caption = 'MessageDlg'
+      ClientHeight = 415
+      ClientWidth = 552
+      object RBDlgType: TRadioGroup
+        Left = 16
+        Height = 196
+        Top = 20
+        Width = 169
+        AutoFill = True
+        Caption = 'Dialog Type'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 166
+        ClientWidth = 165
+        ItemIndex = 0
+        Items.Strings = (
+          'mtWarning'
+          'mtError'
+          'mtInformation'
+          'mtConfirmation'
+          'mtCustom'
+        )
+        TabOrder = 0
+      end
+      object GrpBtns: TGroupBox
+        Left = 194
+        Height = 378
+        Top = 20
+        Width = 150
+        Caption = 'Buttons'
+        ClientHeight = 348
+        ClientWidth = 146
+        TabOrder = 1
+        object CheckBox3: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 2
+          Width = 69
+          Caption = 'mbYes'
+          TabOrder = 0
+        end
+        object CheckBox4: TCheckBox
+          Tag = 1
+          Left = 18
+          Height = 22
+          Top = 28
+          Width = 66
+          Caption = 'mbNo'
+          TabOrder = 1
+        end
+        object CheckBox5: TCheckBox
+          Tag = 2
+          Left = 18
+          Height = 22
+          Top = 54
+          Width = 68
+          Caption = 'mbOK'
+          Checked = True
+          State = cbChecked
+          TabOrder = 2
+        end
+        object CheckBox6: TCheckBox
+          Tag = 3
+          Left = 18
+          Height = 22
+          Top = 80
+          Width = 89
+          Caption = 'mbCancel'
+          TabOrder = 3
+        end
+        object CheckBox7: TCheckBox
+          Tag = 4
+          Left = 18
+          Height = 22
+          Top = 116
+          Width = 83
+          Caption = 'mbAbort'
+          TabOrder = 4
+        end
+        object CheckBox8: TCheckBox
+          Tag = 5
+          Left = 18
+          Height = 22
+          Top = 142
+          Width = 81
+          Caption = 'mbRetry'
+          TabOrder = 5
+        end
+        object CheckBox9: TCheckBox
+          Tag = 6
+          Left = 18
+          Height = 22
+          Top = 168
+          Width = 89
+          Caption = 'mbIgnore'
+          TabOrder = 6
+        end
+        object CheckBox10: TCheckBox
+          Tag = 7
+          Left = 18
+          Height = 22
+          Top = 205
+          Width = 64
+          Caption = 'mbAll'
+          TabOrder = 7
+        end
+        object CheckBox11: TCheckBox
+          Tag = 8
+          Left = 18
+          Height = 22
+          Top = 231
+          Width = 96
+          Caption = 'mbNoToAll'
+          TabOrder = 8
+        end
+        object CheckBox12: TCheckBox
+          Tag = 9
+          Left = 18
+          Height = 22
+          Top = 257
+          Width = 98
+          Caption = 'mbYesToAll'
+          TabOrder = 9
+        end
+        object CheckBox13: TCheckBox
+          Tag = 10
+          Left = 18
+          Height = 22
+          Top = 283
+          Width = 77
+          Caption = 'mbHelp'
+          TabOrder = 10
+        end
+        object CheckBox25: TCheckBox
+          Tag = 11
+          Left = 18
+          Height = 22
+          Top = 309
+          Width = 82
+          Caption = 'mbClose'
+          TabOrder = 11
+        end
+      end
+      object GrpRst: TGroupBox
+        Left = 362
+        Height = 380
+        Top = 18
+        Width = 150
+        Caption = 'Function results'
+        ClientHeight = 350
+        ClientWidth = 146
+        Enabled = False
+        TabOrder = 2
+        object CheckBox14: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 10
+          Width = 66
+          Caption = 'mrYes'
+          TabOrder = 0
+        end
+        object CheckBox15: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 35
+          Width = 64
+          Caption = 'mrNo'
+          TabOrder = 1
+        end
+        object CheckBox16: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 62
+          Width = 65
+          Caption = 'mrOK'
+          TabOrder = 2
+        end
+        object CheckBox17: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 88
+          Width = 86
+          Caption = 'mrCancel'
+          TabOrder = 3
+        end
+        object CheckBox18: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 132
+          Width = 80
+          Caption = 'mrAbort'
+          TabOrder = 4
+        end
+        object CheckBox19: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 158
+          Width = 78
+          Caption = 'mrRetry'
+          TabOrder = 5
+        end
+        object CheckBox20: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 184
+          Width = 87
+          Caption = 'mrIgnore'
+          TabOrder = 6
+        end
+        object CheckBox21: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 221
+          Width = 61
+          Caption = 'mrAll'
+          TabOrder = 7
+        end
+        object CheckBox22: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 246
+          Width = 93
+          Caption = 'mrNoToAll'
+          TabOrder = 8
+        end
+        object CheckBox23: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 273
+          Width = 95
+          Caption = 'mrYesToAll'
+          TabOrder = 9
+        end
+        object CheckBox24: TCheckBox
+          Left = 18
+          Height = 22
+          Top = 299
+          Width = 79
+          Caption = 'mrNone'
+          TabOrder = 10
+        end
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'MessageBox'
+      ClientHeight = 415
+      ClientWidth = 552
+      object RBDlgTypeBox: TRadioGroup
+        Left = 9
+        Height = 167
+        Top = 19
+        Width = 195
+        AutoFill = True
+        Caption = 'Dialog Type'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 137
+        ClientWidth = 191
+        ItemIndex = 0
+        Items.Strings = (
+          'Error / Hand / Stop'
+          'Question'
+          'Exclamation / Warning'
+          'Information / Asterisk'
+        )
+        TabOrder = 0
+      end
+      object GrpRstBox: TGroupBox
+        Left = 415
+        Height = 301
+        Top = 19
+        Width = 124
+        Caption = 'Function results'
+        ClientHeight = 271
+        ClientWidth = 120
+        Enabled = False
+        TabOrder = 1
+        object CheckBox31: TCheckBox
+          Tag = 1
+          Left = 18
+          Height = 22
+          Top = 10
+          Width = 62
+          Caption = 'IDOK'
+          TabOrder = 0
+        end
+        object CheckBox32: TCheckBox
+          Tag = 2
+          Left = 18
+          Height = 22
+          Top = 35
+          Width = 91
+          Caption = 'IDCANCEL'
+          TabOrder = 1
+        end
+        object CheckBox33: TCheckBox
+          Tag = 3
+          Left = 18
+          Height = 22
+          Top = 62
+          Width = 85
+          Caption = 'IDABORT'
+          TabOrder = 2
+        end
+        object CheckBox34: TCheckBox
+          Tag = 4
+          Left = 18
+          Height = 22
+          Top = 88
+          Width = 81
+          Caption = 'IDRETRY'
+          TabOrder = 3
+        end
+        object CheckBox35: TCheckBox
+          Tag = 5
+          Left = 18
+          Height = 22
+          Top = 115
+          Width = 92
+          Caption = 'IDIGNORE'
+          TabOrder = 4
+        end
+        object CheckBox36: TCheckBox
+          Tag = 6
+          Left = 18
+          Height = 22
+          Top = 140
+          Width = 64
+          Caption = 'IDYES'
+          TabOrder = 5
+        end
+        object CheckBox37: TCheckBox
+          Tag = 7
+          Left = 18
+          Height = 22
+          Top = 167
+          Width = 62
+          Caption = 'IDNO'
+          TabOrder = 6
+        end
+        object CheckBox38: TCheckBox
+          Tag = 8
+          Left = 18
+          Height = 22
+          Top = 194
+          Width = 82
+          Caption = 'IDCLOSE'
+          TabOrder = 7
+        end
+        object CheckBox39: TCheckBox
+          Tag = 9
+          Left = 18
+          Height = 22
+          Top = 220
+          Width = 74
+          Caption = 'IDHELP'
+          TabOrder = 8
+        end
+      end
+      object RBBtnsBoxRBDlgTypeBox1: TRadioGroup
+        Left = 212
+        Height = 256
+        Top = 26
+        Width = 194
+        AutoFill = True
+        Caption = 'Dialog Type'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+        ChildSizing.EnlargeVertical = crsHomogenousChildResize
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 226
+        ClientWidth = 190
+        ItemIndex = 0
+        Items.Strings = (
+          '  MB_OK'
+          '  MB_OKCANCEL'
+          '  MB_ABORTRETRYIGNORE'
+          '  MB_YESNOCANCEL'
+          '  MB_YESNO'
+          '  MB_RETRYCANCEL'
+        )
+        TabOrder = 2
+      end
+    end
+  end
+  object BtnTest: TButton
+    Left = 164
+    Height = 26
+    Top = 704
+    Width = 75
+    Caption = 'Test'
+    OnClick = BtnTestClick
+    TabOrder = 5
+  end
+  object BtnClipboard: TButton
+    Left = 252
+    Height = 26
+    Top = 704
+    Width = 75
+    Caption = 'Clipboard'
+    OnClick = BtnClipboardClick
+    TabOrder = 6
+  end
+  object BtnOK: TButton
+    Left = 340
+    Height = 26
+    Top = 704
+    Width = 75
+    Caption = 'OK'
+    ModalResult = 1
+    OnClick = BtnOKClick
+    TabOrder = 7
+  end
+  object BtnCancel: TButton
+    Left = 429
+    Height = 26
+    Top = 704
+    Width = 75
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 8
+  end
+  object HelpCancel: TButton
+    Left = 516
+    Height = 26
+    Top = 704
+    Width = 75
+    Caption = 'Help'
+    Enabled = False
+    OnClick = HelpCancelClick
+    TabOrder = 9
+  end
+  object Label4: TLabel
+    Left = 35
+    Height = 18
+    Top = 23
+    Width = 48
+    Caption = 'Caption'
+    ParentColor = False
+  end
+  object EdCaption: TEdit
+    Left = 97
+    Height = 32
+    Top = 18
+    Width = 494
+    TabOrder = 10
+    Text = 'Message'
+    TextHint = '<Caption>'
+  end
+  object ChkQuoted: TCheckBox
+    Left = 223
+    Height = 22
+    Top = 62
+    Width = 75
+    Caption = 'Quoted'
+    Checked = True
+    State = cbChecked
+    TabOrder = 11
+  end
+end
