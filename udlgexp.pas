@@ -16,6 +16,19 @@ unit uDlgExp;
     Michaël Van Canneyt
     October 1, 2005
 
+
+    Version 1.0.2
+
+       Embed is a csDropDownList
+
+       Controls in result enabled/disabled according embed selection o dialog button
+
+       Save/Load Config ("Save as default")
+
+       Shortcut Alt-Ctrl-M
+
+
+
 }
 
 {$mode objfpc}{$H+}
@@ -31,6 +44,9 @@ uses
 
 procedure Register;
 
+const
+  Version = 0;
+
 type
 
   { TfrmMsgDlgExp }
@@ -42,39 +58,39 @@ type
     BtnCancel: TButton;
     ChkQuoted: TCheckBox;
     HelpCancel: TButton;
-    CheckBox10: TCheckBox;
-    CheckBox11: TCheckBox;
-    CheckBox12: TCheckBox;
-    CheckBox13: TCheckBox;
-    CheckBox14: TCheckBox;
-    CheckBox15: TCheckBox;
-    CheckBox16: TCheckBox;
-    CheckBox17: TCheckBox;
-    CheckBox18: TCheckBox;
-    CheckBox19: TCheckBox;
-    CheckBox2: TCheckBox;
-    CheckBox20: TCheckBox;
-    CheckBox21: TCheckBox;
-    CheckBox22: TCheckBox;
-    CheckBox23: TCheckBox;
-    CheckBox24: TCheckBox;
-    CheckBox25: TCheckBox;
-    CheckBox3: TCheckBox;
-    CheckBox31: TCheckBox;
-    CheckBox32: TCheckBox;
-    CheckBox33: TCheckBox;
-    CheckBox34: TCheckBox;
-    CheckBox35: TCheckBox;
-    CheckBox36: TCheckBox;
-    CheckBox37: TCheckBox;
-    CheckBox38: TCheckBox;
-    CheckBox39: TCheckBox;
-    CheckBox4: TCheckBox;
-    CheckBox5: TCheckBox;
-    CheckBox6: TCheckBox;
-    CheckBox7: TCheckBox;
-    CheckBox8: TCheckBox;
-    CheckBox9: TCheckBox;
+    cbmbAll: TCheckBox;
+    cbmbNoToAll: TCheckBox;
+    cbmbYesToAll: TCheckBox;
+    cbmbHelp: TCheckBox;
+    cbmrYes: TCheckBox;
+    cbmrNo: TCheckBox;
+    cbmrOK: TCheckBox;
+    cbmrCancel: TCheckBox;
+    cbmrAbort: TCheckBox;
+    cbmrRetry: TCheckBox;
+    ChkAutoSave: TCheckBox;
+    cbmrIgnore: TCheckBox;
+    cbmrAll: TCheckBox;
+    cbmrNoToAll: TCheckBox;
+    cbmrYesToAll: TCheckBox;
+    cbmrNone: TCheckBox;
+    cbmbClose: TCheckBox;
+    cbmbYes: TCheckBox;
+    cbIDOK: TCheckBox;
+    cbIDCANCEL: TCheckBox;
+    cbIDABORT: TCheckBox;
+    cbIDRETRY: TCheckBox;
+    cbIDIGNORE: TCheckBox;
+    cbIDYES: TCheckBox;
+    cbIDNO: TCheckBox;
+    cbIDCLOSE: TCheckBox;
+    cbIDHELP: TCheckBox;
+    cbmbNo: TCheckBox;
+    cbmbOK: TCheckBox;
+    cbmbCancel: TCheckBox;
+    cbmbAbort: TCheckBox;
+    cbmbRetry: TCheckBox;
+    cbmbIgnore: TCheckBox;
     CmbEmbed: TComboBox;
     EdCaption: TEdit;
     GrpRstBox: TGroupBox;
@@ -86,7 +102,7 @@ type
     Label4: TLabel;
     mmMsg: TMemo;
     PageControl1: TPageControl;
-    RBBtnsBoxRBDlgTypeBox1: TRadioGroup;
+    RBBtnsBoxRBDlgTypeBox: TRadioGroup;
     RBDlgType: TRadioGroup;
     RBDlgTypeBox: TRadioGroup;
     SeHelpContext: TSpinEdit;
@@ -96,14 +112,24 @@ type
     procedure BtnClipboardClick(Sender: TObject);
     procedure BtnOKClick(Sender: TObject);
     procedure CmbEmbedChange(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure HelpCancelClick(Sender: TObject);
+    procedure RBBtnsBoxRBDlgTypeBoxClick(Sender: TObject);
   private
+    DataDir : string;
+    FileVersion: integer;
     function GenCommand(xpos : longint = 0): String;
     function GenCommandBox(xpos : longint = 0): String;
     procedure ExecCmm;
     procedure ExecCmmBox;
     function CondQuotedStr(const aStr : String): string;
+    procedure SaveConfig;
+    procedure LoadConfig;
+    procedure SetFunctionRst;
+    procedure SetFunctionRstFromCtrl(Sender: TObject);
+    procedure SetFunctionRstBox;
   public
 
   end;
@@ -117,7 +143,7 @@ implementation
 
 {$R *.lfm}
 
-uses clipbrd, LCLType;
+uses clipbrd, LCLType, LCLProc, BaseIDEIntf,LazConfigStorage, LazIDEIntf;
 
 { TfrmMsgDlgExp }
 
@@ -155,21 +181,45 @@ end;
 
 procedure TfrmMsgDlgExp.CmbEmbedChange(Sender: TObject);
 begin
-  { #todo : This must be done Checkbox by Checkbox acording buttons selected }
-  // There is not sense, por example, set the case por btRetry when isn't an option in the dialog.
+  SetFunctionRst;
+  SetFunctionRstBox;
+end;
 
-  GrpRst.Enabled := CmbEmbed.ItemIndex>0;
-  GrpRstBox.Enabled := CmbEmbed.ItemIndex>0;
+procedure TfrmMsgDlgExp.FormClose(Sender: TObject; var CloseAction: TCloseAction
+  );
+begin
+  SaveConfig;
+end;
+
+procedure TfrmMsgDlgExp.FormCreate(Sender: TObject);
+begin
+  if assigned(LazarusIDE) then
+    DataDir := SysUtils.IncludeTrailingPathDelimiter(LazarusIDE.GetPrimaryConfigPath)    // Place for config
+  else
+    DataDir := ExtractFilePath(paramstr(0));
+
+  LoadConfig;
 end;
 
 procedure TfrmMsgDlgExp.FormShow(Sender: TObject);
+var
+   i : integer;
 begin
-  CmbEmbedChange(nil);  // GrpRst  on/off (after recover default data)
+  CmbEmbedChange(nil);  // GrpRst  on/off (after recover default data);
+
+  // Every Button selected could enabled a result
+  for i := 0 to  Pred(GrpBtns.ControlCount) do
+    TCheckBox(GrpBtns.Controls[i]).OnClick := @SetFunctionRstFromCtrl
 end;
 
 procedure TfrmMsgDlgExp.HelpCancelClick(Sender: TObject);
 begin
   Forms.Application.MessageBox('No implemented', 'Warning', MB_OK);
+end;
+
+procedure TfrmMsgDlgExp.RBBtnsBoxRBDlgTypeBoxClick(Sender: TObject);
+begin
+  SetFunctionRstBox
 end;
 
 // Show the dialog as preview
@@ -222,7 +272,7 @@ const
         begin
           CBox := TCheckBox(GrpRst.Controls[i]);
 
-          if CBox.Checked then
+          if CBox.Enabled and CBox.Checked then
             tmp := tmp + CBox.Caption + ', ';
         end;
     result := Copy(tmp,1,tmp.length-2); // we don't need last comma
@@ -337,9 +387,9 @@ begin
   end;
 
   if flags>'' then
-    flags := flags + ' + '+ msgbtn[RBBtnsBoxRBDlgTypeBox1.ItemIndex]
+    flags := flags + ' + '+ msgbtn[RBBtnsBoxRBDlgTypeBox.ItemIndex]
   else
-    flags := msgbtn[RBBtnsBoxRBDlgTypeBox1.ItemIndex];
+    flags := msgbtn[RBBtnsBoxRBDlgTypeBox.ItemIndex];
 
   // Margin to keep aligment
   margin := StringOfChar(' ' , xpos);
@@ -427,7 +477,7 @@ var
 begin
   flags := Succ(RBDlgTypeBox.ItemIndex) * 16;
 
-  flags := flags + RBBtnsBoxRBDlgTypeBox1.ItemIndex;
+  flags := flags + RBBtnsBoxRBDlgTypeBox.ItemIndex;
 
   Forms.Application.MessageBox(PChar(mmMsg.Lines.Text), PChar(EdCaption.Text), flags);
 end;
@@ -438,6 +488,202 @@ begin
     result := QuotedStr(aStr)
   else
     result := aStr
+end;
+
+// Sample:  https://wiki.freepascal.org/Extending_the_IDE/es#Cargar.2FSalvar_configuraciones
+procedure TfrmMsgDlgExp.SaveConfig;
+var
+  Config: TConfigStorage;
+  flag, i : integer;
+  cb : TCheckbox;
+begin
+  if GetIDEConfigStorage = nil then exit;
+  try
+    Config:=GetIDEConfigStorage(DataDir+ 'hexperts.xml',false);
+    try
+     Config.SetDeleteValue('MessageDialog/Version',Version,0);
+     Config.SetDeleteValue('MessageDialog/AutoSave',ChkAutoSave.Checked,false);
+
+     if ChkAutoSave.Checked then
+       begin
+        Config.SetDeleteValue('MessageDialog/Page',PageControl1.ActivePageIndex , 0);
+        Config.SetDeleteValue('MessageDialog/Embed',CmbEmbed.Itemindex , 0);
+        Config.SetDeleteValue('MessageDialog/Caption', EdCaption.Text, 'Message');
+        Config.SetDeleteValue('MessageDialog/msgf', mmMsg.Text, '');
+        Config.SetDeleteValue('MessageDialog/hcontext', SeHelpContext.Value, 0);
+
+        Config.SetDeleteValue('MessageDialog/Quoted',ChkQuoted.Checked, true);
+        Config.SetDeleteValue('MessageDialog/MsgDlg/DlgType',RBDlgType.ItemIndex, 2);
+
+        // MessageDialog Buttons
+        // Each Checkbox has a tag 1,2,3....
+        // So we set a bit 1 oer 0 according the position indexed by the tag
+
+        flag := 0;
+        for i:= 0 to Pred(GrpBtns.ControlCount) do
+          if TCheckBox(GrpBtns.Controls[i]).Checked then
+             flag := flag or (1 shl TCheckBox(GrpBtns.Controls[i]).Tag);
+
+        Config.SetDeleteValue('MessageDialog/MsgDlg/Btn', flag, 0);
+
+        for i:= 0 to Pred(GrpRst.ControlCount) do
+          begin
+            cb := TCheckBox(GrpRst.Controls[i]);
+            Config.SetDeleteValue('MessageDialog/MsgDlg/'+cb.Caption,cb.Checked, false );
+          end;
+
+        Config.SetDeleteValue('MessageDialog/MsgBox/DlgType', RBDlgTypeBox.ItemIndex, 0);
+        Config.SetDeleteValue('MessageDialog/MsgBox/Btn', RBBtnsBoxRBDlgTypeBox.ItemIndex, 0);
+
+        // MessageBox result
+        // Each Checkbox has a tag 1,2,3....
+        // So we set a bit 1 oer 0 according the position indexed by the tag
+
+        flag := 0;
+        for i:= 0 to Pred(GrpRstBox.ControlCount) do
+          if TCheckBox(GrpRstBox.Controls[i]).Checked then
+             flag := flag or (1 shl TCheckBox(GrpRstBox.Controls[i]).Tag);
+
+        Config.SetDeleteValue('MessageDialog/MsgBox/Rst', flag, 0);
+
+
+       end;
+
+
+    finally
+      Config.Free;
+    end;
+  except
+    on E: Exception do begin
+      DebugLn(['Saving hexperts.xml failed: ',E.Message]);
+    end;
+  end;
+end;
+
+procedure TfrmMsgDlgExp.LoadConfig;
+var
+  Config: TConfigStorage;
+  flag, i : integer;
+  cb : TCheckBox;
+begin
+  if GetIDEConfigStorage = nil then exit;
+  try
+    Config:=GetIDEConfigStorage( DataDir+ 'hexperts.xml',true);
+    try
+      // read the version of the config
+      FileVersion:= Config.GetValue('MessageDialog/Version',0);
+      ChkAutoSave.Checked:=Config.GetValue('MessageDialog/AutoSave',false);
+
+     if ChkAutoSave.Checked then
+       begin
+         // Select MessageDiaolgo or MessageBox
+         PageControl1.ActivePageIndex := Config.GetValue('MessageDialog/Page', 0);
+
+
+         CmbEmbed.Itemindex := Config.GetValue('MessageDialog/Embed', 0);
+         EdCaption.Text:=  Config.GetValue('MessageDialog/Caption', 'Message');
+         mmMsg.Text:= Config.GetValue('MessageDialog/msgf', '');
+         SeHelpContext.Value :=  Config.GetValue('MessageDialog/hcontext', 0);
+         ChkQuoted.Checked:= Config.GetValue('MessageDialog/Quoted',true);
+
+         RBDlgType.ItemIndex:= Config.GetValue('MessageDialog/MsgDlg/DlgType', 2);
+
+         // MessageDialog Buttons
+         // Each Checkbox has a tag 1,2,3....
+         // So we set a bit 1 oer 0 according the position indexed by the tag
+
+         flag := Config.GetValue('MessageDialog/MsgDlg/Btn', 0);
+         for i:= 0 to Pred(GrpBtns.ControlCount) do
+           TCheckBox(GrpBtns.Controls[i]).Checked := ((1 shl TCheckBox(GrpBtns.Controls[i]).Tag) and flag)<>0;
+
+
+         // The results are stored/assembled by the caption
+         for i:= 0 to Pred(GrpRst.ControlCount) do
+           begin
+             cb := TCheckBox(GrpRst.Controls[i]);
+             cb.Checked :=  Config.GetValue('MessageDialog/MsgDlg/'+cb.caption, false );
+           end;
+
+         RBDlgTypeBox.ItemIndex:= Config.GetValue('MessageDialog/MsgBox/DlgType', 0);
+         RBBtnsBoxRBDlgTypeBox.ItemIndex:= Config.GetValue('MessageDialog/MsgBox/Btn', 0);
+
+
+         // MessageBox result
+         // Each Checkbox has a tag 1,2,3....
+         // So we set a bit 1 oer 0 according the position indexed by the tag
+
+         flag := Config.GetValue('MessageDialog/MsgBox/Rst', 0);
+         for i:= 0 to Pred(GrpRstBox.ControlCount) do
+           TCheckBox(GrpRstBox.Controls[i]).Checked := ((1 shl TCheckBox(GrpRstBox.Controls[i]).Tag) and flag)<>0
+
+
+       end;
+
+    finally
+      Config.Free;
+    end;
+  except
+    on E: Exception do begin
+      DebugLn(['Loading hexperts.xml failed: ',E.Message]);
+    end;
+  end
+end;
+// Each button  y related with a function result
+procedure TfrmMsgDlgExp.SetFunctionRst;
+var
+  i : integer;
+  mrname, mbname : string;
+  mrcb, mbcb : TCheckBox;
+begin
+  if CmbEmbed.ItemIndex=0 then
+    for i:= 0 to pred(GrpRst.ControlCount) do
+      TCheckBox(GrpRst.Controls[i]).Enabled:= false
+  else
+   begin
+     cbmrNone.Enabled:= true;
+     for i:= 0 to pred(GrpRst.ControlCount) do
+       begin
+          mrcb := TCheckBox(GrpRst.Controls[i]);
+          mrname := mrcb.name;
+          if mrname <> 'cbmrNone' then
+            begin
+               mbname := 'cbmb' + mrname.Substring(4);
+               mbcb := TCheckBox(GrpBtns.FindChildControl(mbname));
+               if (mbcb<>nil) then
+                 mrcb.Enabled := mbcb.Checked;
+            end;
+       end;
+
+   end
+end;
+
+procedure TfrmMsgDlgExp.SetFunctionRstFromCtrl(Sender: TObject);
+begin
+  SetFunctionRst
+end;
+
+procedure TfrmMsgDlgExp.SetFunctionRstBox;
+var
+  i : integer;
+begin
+  if CmbEmbed.ItemIndex=0 then     // All disabled
+    for i:= 0 to pred(GrpRstBox.ControlCount) do
+      TCheckBox(GrpRstBox.Controls[i]).Enabled:= false
+  else
+   begin
+     cbIDHELP.Enabled:= true;
+     cbIDCLOSE.Enabled:= true;
+
+     cbIDNO.Enabled:= RBBtnsBoxRBDlgTypeBox.ItemIndex in [ MB_YESNO, MB_YESNOCANCEL];
+     cbIDYes.Enabled:= RBBtnsBoxRBDlgTypeBox.ItemIndex in [ MB_YESNO, MB_YESNOCANCEL];
+
+     cbIDIGNORE.Enabled:= RBBtnsBoxRBDlgTypeBox.ItemIndex = MB_ABORTRETRYIGNORE;
+     cbIDRETRY.Enabled:= RBBtnsBoxRBDlgTypeBox.ItemIndex in [MB_ABORTRETRYIGNORE, MB_RETRYCANCEL];
+     cbIDABORT.Enabled:= RBBtnsBoxRBDlgTypeBox.ItemIndex = MB_ABORTRETRYIGNORE;
+
+     cbIDCANCEL.Enabled:= RBBtnsBoxRBDlgTypeBox.ItemIndex in [ MB_OKCANCEL, MB_YESNOCANCEL, MB_RETRYCANCEL];
+     cbIDOK.Enabled:= RBBtnsBoxRBDlgTypeBox.ItemIndex in [ MB_OKCANCEL, MB_OK, MB_RETRYCANCEL];
+   end
 end;
 
 Procedure ShowMenu(Sender : TObject);
@@ -454,16 +700,39 @@ end;
 
 
 
-{ #todo : Default Button , probable using XML}
 
+// For the code related to Shortcut
+//   Michaël Van Canneyt "Extending the Lazarus IDE: Menus and the Source editor."
 procedure Register;
+Var
+  Key : TIDEShortCut;
+  Cat : TIDECommandCategory;
+
+  Command: TIDECommand;
 begin
+  Cat:=IDECommandList.CreateCategory(Nil,
+      'hExpert',
+      'Expert to use MessageDialog or MessageBox',
+      IDECmdScopeSrcEdit);
+
+  Key:=IDEShortCut(VK_M,[SSctrl,ssAlt],VK_UNKNOWN,[]);
+
+  Command:=RegisterIDECommand(Cat,
+      'Message Dialog',
+      'Expert to use MessageDialog or MessageBox',
+      Key);
+
+
   RegisterIDEMenuCommand(itmSecondaryTools,
                          'HExperts',                // name
                          'Message Dialog',          // caption
                          nil,                       // onclic         OnClickMethod TNotifyEvent
-                         @ShowMenu            // onclic proc    OnClickProc TNotifyProcedure, procedure(Sender: TObject);
+                         @ShowMenu,             // onclic proc    OnClickProc TNotifyProcedure, procedure(Sender: TObject);
+                         Command
                         );
+
+
+
 end;
 
 end.

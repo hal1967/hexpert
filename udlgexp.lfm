@@ -1,13 +1,15 @@
 object frmMsgDlgExp: TfrmMsgDlgExp
-  Left = 603
+  Left = 650
   Height = 754
-  Top = 43
+  Top = 75
   Width = 625
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Message Dialog'
   ClientHeight = 754
   ClientWidth = 625
+  OnClose = FormClose
+  OnCreate = FormCreate
   OnShow = FormShow
   LCLVersion = '2.2.2.0'
   object Label1: TLabel
@@ -29,14 +31,13 @@ object frmMsgDlgExp: TfrmMsgDlgExp
     )
     TabOrder = 0
   end
-  object CheckBox2: TCheckBox
+  object ChkAutoSave: TCheckBox
     Left = 35
     Height = 22
-    Top = 193
+    Top = 194
     Width = 120
     Caption = 'Save as default'
     TabOrder = 1
-    Visible = False
   end
   object Label2: TLabel
     Left = 196
@@ -60,13 +61,15 @@ object frmMsgDlgExp: TfrmMsgDlgExp
     Top = 190
     Width = 177
     ItemHeight = 24
+    ItemIndex = 0
     Items.Strings = (
-      'as procedure'
+      'simple call'
       'if'
       'negative if'
       'case'
     )
     OnChange = CmbEmbedChange
+    Style = csDropDownList
     TabOrder = 2
     Text = 'simple call'
   end
@@ -116,7 +119,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
         TabOrder = 0
       end
       object GrpBtns: TGroupBox
-        Left = 194
+        Left = 200
         Height = 378
         Top = 20
         Width = 150
@@ -124,7 +127,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
         ClientHeight = 348
         ClientWidth = 146
         TabOrder = 1
-        object CheckBox3: TCheckBox
+        object cbmbYes: TCheckBox
           Left = 18
           Height = 22
           Top = 2
@@ -132,7 +135,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'mbYes'
           TabOrder = 0
         end
-        object CheckBox4: TCheckBox
+        object cbmbNo: TCheckBox
           Tag = 1
           Left = 18
           Height = 22
@@ -141,7 +144,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'mbNo'
           TabOrder = 1
         end
-        object CheckBox5: TCheckBox
+        object cbmbOK: TCheckBox
           Tag = 2
           Left = 18
           Height = 22
@@ -152,7 +155,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           State = cbChecked
           TabOrder = 2
         end
-        object CheckBox6: TCheckBox
+        object cbmbCancel: TCheckBox
           Tag = 3
           Left = 18
           Height = 22
@@ -161,16 +164,16 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'mbCancel'
           TabOrder = 3
         end
-        object CheckBox7: TCheckBox
+        object cbmbAbort: TCheckBox
           Tag = 4
           Left = 18
           Height = 22
-          Top = 116
+          Top = 118
           Width = 83
           Caption = 'mbAbort'
           TabOrder = 4
         end
-        object CheckBox8: TCheckBox
+        object cbmbRetry: TCheckBox
           Tag = 5
           Left = 18
           Height = 22
@@ -179,16 +182,16 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'mbRetry'
           TabOrder = 5
         end
-        object CheckBox9: TCheckBox
+        object cbmbIgnore: TCheckBox
           Tag = 6
           Left = 18
           Height = 22
-          Top = 168
+          Top = 166
           Width = 89
           Caption = 'mbIgnore'
           TabOrder = 6
         end
-        object CheckBox10: TCheckBox
+        object cbmbAll: TCheckBox
           Tag = 7
           Left = 18
           Height = 22
@@ -197,7 +200,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'mbAll'
           TabOrder = 7
         end
-        object CheckBox11: TCheckBox
+        object cbmbNoToAll: TCheckBox
           Tag = 8
           Left = 18
           Height = 22
@@ -206,7 +209,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'mbNoToAll'
           TabOrder = 8
         end
-        object CheckBox12: TCheckBox
+        object cbmbYesToAll: TCheckBox
           Tag = 9
           Left = 18
           Height = 22
@@ -215,7 +218,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'mbYesToAll'
           TabOrder = 9
         end
-        object CheckBox13: TCheckBox
+        object cbmbHelp: TCheckBox
           Tag = 10
           Left = 18
           Height = 22
@@ -224,7 +227,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'mbHelp'
           TabOrder = 10
         end
-        object CheckBox25: TCheckBox
+        object cbmbClose: TCheckBox
           Tag = 11
           Left = 18
           Height = 22
@@ -242,94 +245,104 @@ object frmMsgDlgExp: TfrmMsgDlgExp
         Caption = 'Function results'
         ClientHeight = 350
         ClientWidth = 146
-        Enabled = False
         TabOrder = 2
-        object CheckBox14: TCheckBox
+        object cbmrYes: TCheckBox
           Left = 18
           Height = 22
           Top = 10
           Width = 66
           Caption = 'mrYes'
+          Enabled = False
           TabOrder = 0
         end
-        object CheckBox15: TCheckBox
+        object cbmrNo: TCheckBox
           Left = 18
           Height = 22
           Top = 35
           Width = 64
           Caption = 'mrNo'
+          Enabled = False
           TabOrder = 1
         end
-        object CheckBox16: TCheckBox
+        object cbmrOK: TCheckBox
           Left = 18
           Height = 22
           Top = 62
           Width = 65
           Caption = 'mrOK'
+          Enabled = False
           TabOrder = 2
         end
-        object CheckBox17: TCheckBox
+        object cbmrCancel: TCheckBox
           Left = 18
           Height = 22
           Top = 88
           Width = 86
           Caption = 'mrCancel'
+          Enabled = False
           TabOrder = 3
         end
-        object CheckBox18: TCheckBox
+        object cbmrAbort: TCheckBox
           Left = 18
           Height = 22
           Top = 132
           Width = 80
           Caption = 'mrAbort'
+          Enabled = False
           TabOrder = 4
         end
-        object CheckBox19: TCheckBox
+        object cbmrRetry: TCheckBox
           Left = 18
           Height = 22
           Top = 158
           Width = 78
           Caption = 'mrRetry'
+          Enabled = False
           TabOrder = 5
         end
-        object CheckBox20: TCheckBox
+        object cbmrIgnore: TCheckBox
           Left = 18
           Height = 22
           Top = 184
           Width = 87
           Caption = 'mrIgnore'
+          Enabled = False
           TabOrder = 6
         end
-        object CheckBox21: TCheckBox
+        object cbmrAll: TCheckBox
           Left = 18
           Height = 22
           Top = 221
           Width = 61
           Caption = 'mrAll'
+          Enabled = False
           TabOrder = 7
         end
-        object CheckBox22: TCheckBox
+        object cbmrNoToAll: TCheckBox
           Left = 18
           Height = 22
           Top = 246
           Width = 93
           Caption = 'mrNoToAll'
+          Enabled = False
           TabOrder = 8
         end
-        object CheckBox23: TCheckBox
+        object cbmrYesToAll: TCheckBox
           Left = 18
           Height = 22
           Top = 273
           Width = 95
           Caption = 'mrYesToAll'
+          Enabled = False
           TabOrder = 9
         end
-        object CheckBox24: TCheckBox
+        object cbmrNone: TCheckBox
           Left = 18
           Height = 22
-          Top = 299
+          Top = 307
           Width = 79
           Caption = 'mrNone'
+          Enabled = False
           TabOrder = 10
         end
       end
@@ -342,7 +355,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
         Left = 9
         Height = 167
         Top = 19
-        Width = 195
+        Width = 183
         AutoFill = True
         Caption = 'Dialog Type'
         ChildSizing.LeftRightSpacing = 6
@@ -353,7 +366,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
         ClientHeight = 137
-        ClientWidth = 191
+        ClientWidth = 179
         ItemIndex = 0
         Items.Strings = (
           'Error / Hand / Stop'
@@ -364,16 +377,15 @@ object frmMsgDlgExp: TfrmMsgDlgExp
         TabOrder = 0
       end
       object GrpRstBox: TGroupBox
-        Left = 415
+        Left = 407
         Height = 301
         Top = 19
-        Width = 124
+        Width = 132
         Caption = 'Function results'
         ClientHeight = 271
-        ClientWidth = 120
-        Enabled = False
+        ClientWidth = 128
         TabOrder = 1
-        object CheckBox31: TCheckBox
+        object cbIDOK: TCheckBox
           Tag = 1
           Left = 18
           Height = 22
@@ -382,7 +394,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'IDOK'
           TabOrder = 0
         end
-        object CheckBox32: TCheckBox
+        object cbIDCANCEL: TCheckBox
           Tag = 2
           Left = 18
           Height = 22
@@ -391,7 +403,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'IDCANCEL'
           TabOrder = 1
         end
-        object CheckBox33: TCheckBox
+        object cbIDABORT: TCheckBox
           Tag = 3
           Left = 18
           Height = 22
@@ -400,7 +412,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'IDABORT'
           TabOrder = 2
         end
-        object CheckBox34: TCheckBox
+        object cbIDRETRY: TCheckBox
           Tag = 4
           Left = 18
           Height = 22
@@ -409,7 +421,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'IDRETRY'
           TabOrder = 3
         end
-        object CheckBox35: TCheckBox
+        object cbIDIGNORE: TCheckBox
           Tag = 5
           Left = 18
           Height = 22
@@ -418,7 +430,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'IDIGNORE'
           TabOrder = 4
         end
-        object CheckBox36: TCheckBox
+        object cbIDYES: TCheckBox
           Tag = 6
           Left = 18
           Height = 22
@@ -427,7 +439,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'IDYES'
           TabOrder = 5
         end
-        object CheckBox37: TCheckBox
+        object cbIDNO: TCheckBox
           Tag = 7
           Left = 18
           Height = 22
@@ -436,7 +448,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'IDNO'
           TabOrder = 6
         end
-        object CheckBox38: TCheckBox
+        object cbIDCLOSE: TCheckBox
           Tag = 8
           Left = 18
           Height = 22
@@ -445,7 +457,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           Caption = 'IDCLOSE'
           TabOrder = 7
         end
-        object CheckBox39: TCheckBox
+        object cbIDHELP: TCheckBox
           Tag = 9
           Left = 18
           Height = 22
@@ -455,11 +467,11 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           TabOrder = 8
         end
       end
-      object RBBtnsBoxRBDlgTypeBox1: TRadioGroup
-        Left = 212
-        Height = 256
-        Top = 26
-        Width = 194
+      object RBBtnsBoxRBDlgTypeBox: TRadioGroup
+        Left = 200
+        Height = 269
+        Top = 19
+        Width = 202
         AutoFill = True
         Caption = 'Dialog Type'
         ChildSizing.LeftRightSpacing = 6
@@ -469,8 +481,8 @@ object frmMsgDlgExp: TfrmMsgDlgExp
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
-        ClientHeight = 226
-        ClientWidth = 190
+        ClientHeight = 239
+        ClientWidth = 198
         ItemIndex = 0
         Items.Strings = (
           '  MB_OK'
@@ -480,6 +492,7 @@ object frmMsgDlgExp: TfrmMsgDlgExp
           '  MB_YESNO'
           '  MB_RETRYCANCEL'
         )
+        OnClick = RBBtnsBoxRBDlgTypeBoxClick
         TabOrder = 2
       end
     end
